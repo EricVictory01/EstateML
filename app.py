@@ -7,9 +7,9 @@ df_filtered = pd.read_csv("data/filtered_properties.csv")
 
 st.title("Nigeria Smart Property Finder")
 st.markdown("""
-### Find your perfect home in Lagos or Abuja
-This tool uses a **K-Means Clustering** machine learning model to analyze property patterns. 
-Enter your preferences at the side, and we'll find properties that fit what you are looking.
+### Find your perfect home, whether in Lagos or Abuja!
+This System uses a **K-Means Clustering** Machine Learning model to analyze property patterns and recommend the perfect home for you.
+Enter your preferences at the sidebar, and we'll find properties that fit what you are looking for.
 """)
 with st.sidebar:
     st.header("Your Preferences")
