@@ -69,7 +69,7 @@ def recommend_by_cluster(bedrooms, bathrooms, toilets, parking_space,
     ).head(top_k)
 
     display_cols = [
-        'title', 'town', 'toilets' 'state',
+        'title', 'town', 'toilets', 'state',
         'bedrooms', 'bathrooms', 'parking_space', 'price'
     ]
 
