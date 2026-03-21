@@ -6,7 +6,11 @@ from logic import recommend_by_cluster
 df_filtered = pd.read_csv("data/filtered_properties.csv")
 
 st.title("Nigeria Smart Property Finder")
-
+st.markdown("""
+### Find your perfect home in Lagos or Abuja
+This tool uses a **K-Means Clustering** machine learning model to analyze property patterns. 
+Enter your preferences at the side, and we'll find properties that fit what you are looking.
+""")
 with st.sidebar:
     st.header("Your Preferences")
 
