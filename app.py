@@ -1,44 +1,95 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 from logic import recommend_by_cluster
 
-# Load original filtered dataset (for dropdowns)
+st.set_page_config(
+    page_title="EstateML",
+    page_icon="🏠",
+    layout="wide"
+)
+
 df_filtered = pd.read_csv("data/filtered_properties.csv")
 
 st.title("Smart Property Finder")
 st.markdown("""
-### Find your perfect home, whether in Lagos or Abuja!
-This System uses a **K-Means Clustering** Machine Learning model to analyze property patterns and recommend the perfect home for you.
-Enter your preferences at the sidebar, and we'll find properties that fit what you are looking for.
+## Nigeria Smart Property Finder
+
+EstateML helps users discover better property options using machine learning-powered recommendations, match scoring, price insights, and fairness checks.
+
+Instead of hiding the main action inside a sidebar, choose your preferences below and get smart recommendations instantly.
 """)
-with st.sidebar:
-    st.header("Your Preferences")
 
-    bedrooms  = st.slider("Bedrooms", 1, 10, 3)
-    bathrooms = st.slider("Bathrooms", 1, 10, 2)
-    toilets   = st.slider("Toilets", 1, 10, 2)
-    parking   = st.slider("Parking Spaces", 0, 10, 1)
+st.markdown("---")
 
-    budget_min = st.number_input("Min Budget", value=20_000_000)
-    budget_max = st.number_input("Max Budget", value=100_000_000)
+st.subheader("Set Your Property Preferences")
 
-    state = st.selectbox("State", sorted(df_filtered['state'].unique()))
-    town  = st.selectbox(
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    state = st.selectbox("State", sorted(df_filtered["state"].unique()))
+    town = st.selectbox(
         "Town",
-        sorted(df_filtered[df_filtered['state'] == state]['town'].unique())
+        sorted(df_filtered[df_filtered["state"] == state]["town"].unique())
     )
-    title = st.selectbox("Property Type", sorted(df_filtered['title'].unique()))
+    title = st.selectbox("Property Type", sorted(df_filtered["title"].unique()))
 
-    top_k = st.slider("Results", 3, 20, 5)
+with col2:
+    bedrooms = st.slider("Bedrooms", 1, 10, 3)
+    bathrooms = st.slider("Bathrooms", 1, 10, 2)
+    toilets = st.slider("Toilets", 1, 10, 2)
 
-if st.button("Find Properties"):
-    results = recommend_by_cluster(
-        bedrooms, bathrooms, toilets, parking,
-        budget_min, budget_max,
-        state, town, title, top_k
-    )
+with col3:
+    parking = st.slider("Parking Spaces", 0, 10, 1)
+    budget_min = st.number_input("Minimum Budget (₦)", value=20_000_000, step=1_000_000)
+    budget_max = st.number_input("Maximum Budget (₦)", value=100_000_000, step=1_000_000)
 
-    if not results.empty:
-        st.dataframe(results)
+top_k = st.slider("Number of Recommendations", 3, 20, 5)
+
+st.markdown("---")
+
+st.markdown("""
+### How EstateML Works
+1. You enter your property preferences  
+2. The system compares your request with similar properties  
+3. EstateML returns ranked recommendations with match and price insights  
+""")
+
+find_button = st.button("Get Smart Recommendations", use_container_width=True)
+
+if find_button:
+    if budget_min >= budget_max:
+        st.error("Maximum budget must be greater than minimum budget.")
     else:
-        st.warning("No results found.")
+        results = recommend_by_cluster(
+            bedrooms, bathrooms, toilets, parking,
+            budget_min, budget_max,
+            state, town, title, top_k
+        )
+
+        if not results.empty:
+            st.success("Recommendations generated successfully.")
+
+            if "distance" in results.columns and results["distance"].max() != 0:
+                results["Match Score"] = (
+                    1 - (results["distance"] / results["distance"].max())
+                ) * 100
+                results["Match Score"] = results["Match Score"].round(1).astype(str) + "%"
+
+            st.info(
+                "These properties were selected because they closely match your preferred location, budget, and property features."
+            )
+
+            st.subheader("Recommended Properties")
+            st.dataframe(results, use_container_width=True)
+
+            if "price" in results.columns:
+                st.subheader("Price Distribution")
+                fig, ax = plt.subplots()
+                ax.hist(results["price"], bins=10)
+                ax.set_xlabel("Price (₦)")
+                ax.set_ylabel("Number of Properties")
+                st.pyplot(fig)
+
+        else:
+            st.warning("No matching properties found. Try increasing your budget or changing your preferences.")
