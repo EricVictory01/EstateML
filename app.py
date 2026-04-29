@@ -13,7 +13,7 @@ df_filtered = pd.read_csv("data/filtered_properties.csv")
 
 st.title("Smart Property Finder")
 st.markdown("""
-## Nigeria Smart Property Finder
+## Smart Property Finder
 
 EstateML helps users discover better property options using machine learning-powered recommendations, match scoring, price insights, and fairness checks.
 
