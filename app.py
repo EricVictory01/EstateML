@@ -12,12 +12,13 @@ st.set_page_config(
 df_filtered = pd.read_csv("data/filtered_properties.csv")
 
 st.title("Smart Property Finder")
+st.markdown("###  AI-Powered •  Smart Matching •  Data-Driven")
 st.markdown("""
 ## Smart Property Finder
 
 EstateML helps users discover better property options using machine learning-powered recommendations, match scoring, price insights, and fairness checks.
 
-Instead of hiding the main action inside a sidebar, choose your preferences below and get smart recommendations instantly.
+Choose your preferences below and get smart recommendations instantly.
 """)
 
 st.markdown("---")
