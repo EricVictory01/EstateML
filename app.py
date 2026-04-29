@@ -11,7 +11,7 @@ st.set_page_config(
 
 df_filtered = pd.read_csv("data/filtered_properties.csv")
 
-st.title("🏠 EstateML")
+st.title("Smart Property Finder")
 st.markdown("""
 ## Nigeria Smart Property Finder
 
