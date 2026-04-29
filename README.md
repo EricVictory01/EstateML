@@ -14,9 +14,8 @@ EstateML uses machine learning to recommend properties based on user preferences
 ---
 
 ## Screenshots
-Add screenshot of your running Streamlit app here.
 
----
+![App Screenshot](screenshot.png)
 
 ## Architecture
 Data → Preprocessing → KMeans Clustering → Distance Scoring → Ranked Recommendations → Streamlit UI
